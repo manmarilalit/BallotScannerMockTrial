@@ -13,6 +13,9 @@ navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
     video.srcObject = stream;
     video.onloadedmetadata = (e) => {
         video.play();
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
     };
 })
 .catch((err) => {
@@ -20,13 +23,22 @@ navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
 });
 
 captureButton.addEventListener('click', () => {
-    context.drawImage(video, 0, 0, canvas.clientWidth, canvas.clientHeight);
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    imageURL = canvas.toDataURL('image/png');
+    console.log(imageURL);
+
+    const image = document.createElement('img');
+    image.src = imageURL;
+    image.width = 160;
+    gallery.appendChild(image);
+
+    let images = JSON.parse(localStorage.getItem('capturedImages')) || [];
+    images.push(imageURL);
+    localStorage.setItem('capturedImages', JSON.stringify(images));
 });
 
-imageURL = canvas.toDataURL('image/png');
-console.log(imageURL);
+gallery.addEventListener('click', (event) => {
+    if (event.target.tagName === 'IMG') { window.location.href = 'confirm.html'; }
+});
 
-const image = document.createElement('img');
-image.src = imageURL;
-image.width = 160;
-gallery.appendChild(image);
+
