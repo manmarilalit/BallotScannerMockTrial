@@ -12,6 +12,7 @@ const gallery = document.getElementById('gallery');
 navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
     video.srcObject = stream;
     video.onloadedmetadata = (e) => {
+        video.muted = true;
         video.play();
 
         canvas.width = video.videoWidth;
@@ -38,7 +39,9 @@ captureButton.addEventListener('click', () => {
 });
 
 gallery.addEventListener('click', (event) => {
-    if (event.target.tagName === 'IMG') { window.location.href = 'confirm.html'; }
+    if (event.target.tagName === 'IMG') {
+        window.location.href = 'confirm.html'; // <- triggers immediately
+    }
 });
 
 
